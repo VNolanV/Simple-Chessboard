@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Opponent</title>
+        <link rel="stylesheet" href="css/chessboard-1.0.0.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="js/chessboard-1.0.0.js"></script>
+    </head>
+    <body>
+
+        <div id="statusMessage" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <p style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">Opponent Is Making Their Move</p>
+        </div>
+
+        <div id="myBoard" style="width: 400px; margin: 0 auto; display: block;"></div>
+
+
+        <script>
+            // Set initial values for turn_no and game_no
+            let turn_no = "{{turn_no}}";  // This value should be set from the server-side when serving the page
+
+            nextTurn = parseInt(turn_no) + 1;
+            
+            
+            let game_no = "{{game_no}}"; // This value should be set from the server-side when serving the page
+
+            //Configuration of chessboard using config
+            var config = {
+                draggable: false,
+                dropOffBoard: 'snapback', // this is the default
+                position: '{{fenString}}',
+                pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
+            }
+            var board = Chessboard('myBoard', config)
+            
+
+            // Function to check if the opponent (Black) has joined
+            function checkForNewRow() {
+                $.ajax({
+                    url: '/check_new_row', // Server endpoint that checks if BLACK_HANDLE is not null
+                    type: 'GET',
+                    data: { game_no: game_no, nextTurn: nextTurn }, // Pass the game number as a parameter
+                    success: function(response) {
+                        if (response.new_row_found == true) {
+                            // Create a form dynamically
+                            var form = $('<form>', {
+                                'action': '/player.html', // Target URL
+                                'method': 'POST' // POST method
+                            });
+
+                            // Add game_no and turn_no as hidden inputs
+                            form.append($('<input>', {
+                                'type': 'hidden',
+                                'name': 'game_no',
+                                'value': game_no
+                            }));
+                            form.append($('<input>', {
+                                'type': 'hidden',
+                                'name': 'turn_no',
+                                'value': nextTurn
+                            }));
+
+                            // Append the form to the body and submit it
+                            $('body').append(form);
+                            form.submit(); // Submit the form as a POST request
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error checking for opponent:', error);
+                    }
+                });
+            }
+
+            // Start querying the server once per second to check if Black has joined
+            let checkInterval = setInterval(checkForNewRow, 1000);
+        </script>
+
+    </body>
+</html>

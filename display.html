@@ -1,0 +1,48 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game - Display</title>
+    
+    <link rel="stylesheet" href="css/chessboard-1.0.0.css">
+    
+    <style>
+        /* Additional styles for centering the chessboard */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <script
+        src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+    <script 
+        src="js/chessboard-1.0.0.js">
+    </script>
+
+
+    <!-- Chessboard container with inline width style -->
+    <div id="myBoard" style="width: 400px; height: 400px;"></div>
+
+    <script>
+        //Initialize the chessboard with the FEN string
+
+        var fenString = '{{fen_string}}' ;  //FEN string will be injected here
+
+        var config = {
+        pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
+        position: fenString
+        }
+
+        
+        var board = Chessboard('myBoard', config);
+    </script>
+</body>
+</html>

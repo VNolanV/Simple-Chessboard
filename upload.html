@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title> Upload </title>
+  </head>
+  <body>
+    <form action="board.html" method="post" enctype="multipart/form-data">
+      <!-- File upload -->
+      <label for="stringboard">Upload Board File:</label>
+      <input type="file" id="stringboard" name="stringboard" required><br><br>
+
+      <!-- Turn -->
+      <label for="turn">Turn:</label>
+      <input type="text" id="turn" name="turn" required><br><br>
+
+      <!-- White time -->
+      <label for="wtime">White Time (s):</label>
+      <input type="number" id="wtime" name="wtime" required><br><br>
+
+      <!-- Black time -->
+      <label for="btime">Black Time (s):</label>
+      <input type="number" id="btime" name="btime" required><br><br>
+
+      <!-- Submit button -->
+      <input type="submit">
+    </form>
+  </body>
+</html>

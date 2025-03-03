@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Log</title>
+    <link rel="stylesheet" href="css/chessboard-1.0.0.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="js/chessboard-1.0.0.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        tr {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Log</h1>
+
+    <!-- Game result -->
+    <h2>Game Result: {{GAME_RESULT}}</h2>
+
+    <!-- Game moves table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Turn No</th>
+                <th>Player Turn</th>
+                <th>FEN Board</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{TABLE_ROWS}} <!-- Placeholder for dynamically injected table rows and chessboards -->
+        </tbody>
+    </table>
+
+    <!-- Injected JavaScript for setting up multiple chessboards -->
+    <script>
+        {{CHESSBOARD_JS}} <!-- Placeholder for dynamically injected JavaScript to create chessboards -->
+    </script>
+
+    <div id="history" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+        <form id="histroyRequest" action="/history.html" method="get" style="display: inline;">
+            <button type="button" id="historyButton">History</button>
+        </form>
+
+    </div>
+
+    <div id="index" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+        <form id="indexRequest" action="/index.html" method="get" style="display: inline;">
+            <button type="button" id="indexButton">Login/Play Again</button>
+        </form>
+
+    </div>
+
+    <script>
+
+        //Handler for the "History" button click
+        document.getElementById('historyButton').addEventListener('click', function() {
+                
+                // Submit the form to the server
+                document.getElementById('histroyRequest').submit();
+
+
+            });
+
+            //Handler for the "Login/Play Again" button click
+            document.getElementById('indexButton').addEventListener('click', function() {
+                
+                // Submit the form to the server
+                document.getElementById('indexRequest').submit();
+
+
+            });
+    </script>
+
+</body>
+</html>

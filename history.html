@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+    <head>
+        <title>History</title>
+        <link rel="stylesheet" href="css/chessboard-1.0.0.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="js/chessboard-1.0.0.js"></script>
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+            tr:hover {
+                background-color: #f1f1f1;
+            }
+            tr {
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <!--- Div Sections (myBoard, gameStatus) ------------------------------------------------------>
+
+        <h1>Game History</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Game No</th>
+                    <th>White Player</th>
+                    <th>Black Player</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic Table Rows Will Be Inserted Here -->
+                {{TABLE_ROWS}}
+            </tbody>
+        </table>
+
+
+        </script>
+
+    </body>
+</html>

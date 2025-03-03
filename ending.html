@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Game End</title>
+        <link rel="stylesheet" href="css/chessboard-1.0.0.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="js/chessboard-1.0.0.js"></script>
+    </head>
+    <body>
+        <!--- Div Sections (results, histroy, index) ------------------------------------------------------>
+        
+
+        <div id="results" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <p id="resultsDisplay"></p>
+        </div>
+
+        <div id="history" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+            <form id="histroyRequest" action="/history.html" method="get" style="display: inline;">
+                <button type="button" id="historyButton">History</button>
+            </form>
+
+        </div>
+
+        <div id="index" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+            <form id="indexRequest" action="/index.html" method="get" style="display: inline;">
+                <button type="button" id="indexButton">Login/Play Again</button>
+            </form>
+
+        </div>
+
+        <!--- Javascript Sections -------------------------------------------------------->
+
+        <script>
+
+            document.getElementById('resultsDisplay').innerText = "{{result}}";
+
+
+
+            //Handler for the "History" button click
+            document.getElementById('historyButton').addEventListener('click', function() {
+                
+                // Submit the form to the server
+                document.getElementById('histroyRequest').submit();
+
+
+            });
+
+            //Handler for the "Login/Play Again" button click
+            document.getElementById('indexButton').addEventListener('click', function() {
+                
+                // Submit the form to the server
+                document.getElementById('indexRequest').submit();
+
+
+            });
+
+        </script>
+
+    </body>
+</html>

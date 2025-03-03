@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Player</title>
+        <link rel="stylesheet" href="css/chessboard-1.0.0.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="js/chessboard-1.0.0.js"></script>
+    </head>
+    <body>
+        <!--- Div Sections (myBoard, gameStatus) ------------------------------------------------------>
+        <div id="myBoard" style="width: 400px; margin: 0 auto; display: block;"></div>
+
+        <div id="gameStatus" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+            <span>White: <span id="wtimeDisplay">00:00</span></span>
+
+            <form id="gameForm" action="/opponent.html" method="post" style="display: inline;">
+
+                <input type="hidden" id="fenStringInput" name="fenString" value="">
+                <input type="hidden" id="gameNoInput" name="game_no" value="{{game_no}}">
+                <input type="hidden" id="turnNoInput" name="turn_no" value="{{turn_no}}">
+                <input type="hidden" id="sourceInput" name="source" value="">
+                <input type="hidden" id="targetInput" name="target" value="">
+                <input type="hidden" id="pieceInput" name="piece" value="">
+    
+            <!-- Button to trigger form submission via JavaScript -->
+            <button type="button" id="doneButton">Done</button>
+
+            </form>
+
+            <span><span id="btimeDisplay">00:00</span>:Black</span>
+
+
+        </div>
+
+        <!--- Javascript Sections -------------------------------------------------------->
+
+
+        <script>
+
+            //Getting the initial values of wtime and btime from hidden inputs
+            let wtime = "{{wtime}}"
+            let btime = "{{btime}}"
+            let turn = "{{turn}}"
+
+            //Helper function to format time into minutes:seconds with leading zero
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const sec = seconds % 60;
+                return minutes + ':' + (sec < 10 ? '0' : '') + sec;
+            }
+
+            //Displaying the initial times under new IDs wtimeDisplay and btimeDisplay
+            document.getElementById('wtimeDisplay').innerText = formatTime(wtime);
+            document.getElementById('btimeDisplay').innerText = formatTime(btime);
+
+            function updateTimers() {
+                // Check whose turn it is
+                if (turn === 'w' && wtime > 0) {
+                    wtime--; // Decrement white's time
+                } else if (turn === 'b' && btime > 0) {
+                    btime--; // Decrement black's time
+                }
+
+                // Update the displayed time
+                document.getElementById('wtimeDisplay').innerText = formatTime(wtime);
+                document.getElementById('btimeDisplay').innerText = formatTime(btime);
+
+                // Stop at zero
+                if (wtime === 0 && turn === 'w') {
+                    clearInterval(timerInterval); // Stop counting when white's time reaches zero
+                }
+                if (btime === 0 && turn === 'b') {
+                    clearInterval(timerInterval); // Stop counting when black's time reaches zero
+                }
+            }
+
+            let timerInterval = setInterval(updateTimers, 1000);
+
+        </script>
+
+
+        <script>
+            function onDrop(source, target, piece, newPos, oldPos, orientation) {
+            console.log('Source: ' + source);
+            console.log('Target: ' + target);
+            console.log('Piece: ' + piece);
+            console.log('New position: ' + Chessboard.objToFen(newPos));
+            console.log('Old position: ' + Chessboard.objToFen(oldPos));
+            console.log('Orientation: ' + orientation);
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
+            // Set the values for hidden fields in the form
+            document.getElementById('sourceInput').value = source;
+            document.getElementById('targetInput').value = target;
+            document.getElementById('pieceInput').value = piece;
+}
+        </script>
+
+        <script>
+
+            //Configuration of chessboard using config
+            var config = {
+                draggable: true,
+                dropOffBoard: 'snapback', // this is the default
+                position: '{{fen_string}}',
+                pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
+            }
+            var board = Chessboard('myBoard', config)
+        </script>
+
+        <script>
+
+            //Handler for the "Done" button click
+            document.getElementById('doneButton').addEventListener('click', function() {
+                
+                // Get the FEN string from the chessboard and assign it to the hidden input
+                document.getElementById('fenStringInput').value = board.fen();
+                
+                // Log the value for debugging purposes
+                console.log(document.getElementById('fenStringInput').value);
+
+                // Submit the form to the server
+                document.getElementById('gameForm').submit();
+
+                // Stop the current interval and restart the countdown
+                clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimers, 1000);
+            });
+
+
+
+        </script>
+
+    </body>
+</html>

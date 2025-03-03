@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+    <head>
+        <title>test</title>
+        <link rel="stylesheet" href="css/chessboard-1.0.0.css">
+    </head>
+    <body>
+        <!--- Div Sections (myBoard, gameStatus) ------------------------------------------------------>
+        <div id="myBoard" style="width: 400px"></div>
+
+        <div id="gameStatus" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+            <span>White: <span id="wtimeDisplay">00:00</span></span>
+
+            <form id="gameForm" action="board.html" method="post" style="display: inline;">
+
+                <input type="hidden" id="turnInput" name="turn" value="{{turn}}">
+                <input type="hidden" id="stringboardInput" name="stringboard" value="{{fen_string}}">
+                <input type="hidden" id="wtimeInput" name="wtime" value="{{wtime}}">
+                <input type="hidden" id="btimeInput" name="btime" value="{{btime}}">
+
+                <button type="button" id="doneButton">Done</button>
+
+            </form>
+
+            <span><span id="btimeDisplay">00:00</span>:Black</span>
+
+
+        </div>
+
+        <!--- Javascript Sections -------------------------------------------------------->
+        <script
+            src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+        </script>
+        <script 
+            src="js/chessboard-1.0.0.js">
+        </script>
+
+        <script>
+
+            //Getting the initial values of wtime and btime from hidden inputs
+            let wtime = parseInt(document.getElementById('wtimeInput').value);
+            let btime = parseInt(document.getElementById('btimeInput').value);
+            let turn = document.getElementById('turnInput').value;
+
+            //Helper function to format time into minutes:seconds with leading zero
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const sec = seconds % 60;
+                return minutes + ':' + (sec < 10 ? '0' : '') + sec;
+            }
+
+            //Displaying the initial times under new IDs wtimeDisplay and btimeDisplay
+            document.getElementById('wtimeDisplay').innerText = formatTime(wtime);
+            document.getElementById('btimeDisplay').innerText = formatTime(btime);
+
+            function updateTimers() {
+                // Check whose turn it is
+                if (turn === 'w' && wtime > 0) {
+                    wtime--; // Decrement white's time
+                } else if (turn === 'b' && btime > 0) {
+                    btime--; // Decrement black's time
+                }
+
+                // Update the displayed time
+                document.getElementById('wtimeDisplay').innerText = formatTime(wtime);
+                document.getElementById('btimeDisplay').innerText = formatTime(btime);
+
+                // Stop at zero
+                if (wtime === 0 && turn === 'w') {
+                    clearInterval(timerInterval); // Stop counting when white's time reaches zero
+                }
+                if (btime === 0 && turn === 'b') {
+                    clearInterval(timerInterval); // Stop counting when black's time reaches zero
+                }
+            }
+
+            let timerInterval = setInterval(updateTimers, 1000);
+
+        </script>
+
+        <script>
+
+            //Configuration of chessboard using config
+            var config = {
+                draggable: true,
+                dropOffBoard: 'snapback', // this is the default
+                position: 'start',
+                pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
+            }
+            var board = Chessboard('myBoard', config)
+        </script>
+
+        <script>
+
+            //Handler for the "Done" button click
+            document.getElementById('doneButton').addEventListener('click', function() {
+                // Reverse the turn
+                if (turn === 'w') {
+                turn = 'b';
+                } else {
+                turn = 'w';
+                }
+                // Update the hidden turn input with the reversed turn
+                document.getElementById('turnInput').value = turn;
+
+                // Submit the form to the server
+                document.getElementById('gameForm').submit();
+
+                clearInterval(timerInterval);  // Stop the current interval
+                timerInterval = setInterval(updateTimers, 1000);  // Restart the countdown
+
+            });
+
+
+        </script>
+
+    </body>
+</html>
